@@ -8,10 +8,10 @@ import os
 # --- CONFIGURATION ---
 CHANNEL_ID = "@AIGlobalUpdates" 
 
-# --- CRITICAL SETTING FOR SPEED ---
-# We will check for news that is up to 10 minutes old.
-# This matches our schedule (running every 5-10 mins).
-MAX_AGE_MINUTES = 15 
+# --- SAFETY SETTING ---
+# We check for news from the last 25 minutes.
+# This ensures if the bot runs every 20 mins, we don't miss anything.
+MAX_AGE_MINUTES = 25 
 
 RSS_FEEDS = [
     "http://export.arxiv.org/rss/cs.AI",
@@ -21,11 +21,14 @@ RSS_FEEDS = [
     "https://techcrunch.com/category/artificial-intelligence/feed/",
     "https://www.theverge.com/rss/index.xml",
     "https://venturebeat.com/category/ai/feed/",
+    "https://news.mit.edu/rss/topic/artificial-intelligence2",
 ]
 
+# --- THE LOGIC ---
+
 def post_to_telegram(bot_token, title, link, source):
-    # Added "🔥" to show it is Breaking News
-    message = f"🔥 **Just In: {source}**\n\n{title}\n\n🔗 [Read Article]({link})"
+    # Using a "⚡" (Lightning) to show it is a Quick Update
+    message = f"⚡ **Update: {source}**\n\n{title}\n\n🔗 [Read Article]({link})"
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {
         "chat_id": CHANNEL_ID,
@@ -40,19 +43,17 @@ def post_to_telegram(bot_token, title, link, source):
 def run_bot():
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     if not BOT_TOKEN:
+        print("Error: No Token Found")
         return
 
-    # current time in UTC
     now = datetime.now(timezone.utc)
     
     for url in RSS_FEEDS:
         try:
             feed = feedparser.parse(url)
             
-            # Check the very latest post only (Speed optimization)
-            if len(feed.entries) > 0:
-                entry = feed.entries[0] 
-                
+            # Check the top 3 newest items
+            for entry in feed.entries[:3]:
                 if hasattr(entry, 'published_parsed'):
                     post_time_struct = entry.published_parsed
                 elif hasattr(entry, 'updated_parsed'):
@@ -63,14 +64,14 @@ def run_bot():
                 post_time = datetime.fromtimestamp(mktime(post_time_struct), timezone.utc)
                 age = now - post_time
                 
-                # If the news came out in the last 15 minutes, POST IT.
+                # IF news is less than 25 minutes old -> POST IT
                 if age <= timedelta(minutes=MAX_AGE_MINUTES) and age > timedelta(seconds=0):
-                    print(f"New fast update: {entry.title}")
+                    print(f"New Update Found: {entry.title}")
                     source_name = feed.feed.get('title', 'AI News')
                     post_to_telegram(BOT_TOKEN, entry.title, entry.link, source_name)
                     
         except Exception as e:
-            pass # Skip errors to keep it fast
+            pass 
 
 if __name__ == "__main__":
     run_bot()
