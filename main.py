@@ -59,7 +59,7 @@ RSS_FEEDS = [
 
 def post_to_telegram(bot_token, title, link, source):
     # Using a "⚡" (Lightning) to show it is a Quick Update
-    message = f"⚡ **Update: {source}**\n\n{title}\n\n🔗 [Read Article]({link})"
+    message = f"⚡ **Update: {source}**\n\n{title}\n\n🔗 [Read Article]({link})\n\n#AI #ArtificialIntelligence #TechNews #Innovation"
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {
         "chat_id": CHANNEL_ID,
