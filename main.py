@@ -3,7 +3,7 @@ import requests
 import os
 
 # --- CONFIGURATION ---
-CHANNEL_ID = "@AIGlobalUpdates"  # <--- MAKE SURE THIS IS CORRECT
+CHANNEL_ID = "@AIGlobalUpdates"  # Ensure this is your correct channel ID
 TEST_FEED = "https://techcrunch.com/category/artificial-intelligence/feed/"
 
 def run_test():
@@ -30,9 +30,11 @@ def run_test():
     print(f"✅ Found an article: {title}")
     
     # 3. Try to Send to Telegram
+    # FIXED: Used 'BOT_TOKEN' (uppercase) correctly here
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    
     message = f"🧪 **TEST MESSAGE**\n\nThis is a test to prove the bot works.\n\n📰 {title}\n🔗 {link}"
     
-    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
     payload = {
         "chat_id": CHANNEL_ID,
         "text": message,
