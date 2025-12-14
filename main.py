@@ -10,49 +10,49 @@ CHANNEL_ID = "@AIGlobalUpdates"
 
 # --- SAFETY SETTING ---
 # We check for news from the last 25 minutes.
-# This ensures if the bot runs every 20 mins, we don't miss anything.
 MAX_AGE_MINUTES = 25 
 
 RSS_FEEDS = [
+    # Top Tech & Research
     "http://export.arxiv.org/rss/cs.AI",
     "https://openai.com/blog/rss.xml",
     "https://research.google/blog/rss/",
     "https://huggingface.co/blog/feed.xml",
+    "https://news.mit.edu/rss/topic/artificial-intelligence2",
+    "https://news.microsoft.com/source/topics/ai/feed/",
+    "https://intelligence.org/blog/feed/",
+    "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml",
+    "https://www.marketingaiinstitute.com/blog/rss.xml",
+    
+    # Tech News Sites
     "https://techcrunch.com/category/artificial-intelligence/feed/",
     "https://www.theverge.com/rss/index.xml",
     "https://venturebeat.com/category/ai/feed/",
-    "https://news.mit.edu/rss/topic/artificial-intelligence2",
-    "https://news.microsoft.com/source/topics/ai/feed/",
-    "https://www.marketingaiinstitute.com/blog/rss.xml",
+    "https://www.wired.com/feed/tag/ai/latest/rss",
+    "https://www.theguardian.com/technology/artificialintelligenceai/rss",
+    "https://www.computerworld.com/artificial-intelligence/feed/",
+    "https://www.fastcompany.com/section/artificial-intelligence/rss",
+    "https://www.geekwire.com/tag/ai/feed/",
+    "https://www.livemint.com/rss/AI",
+    "https://rss.beehiiv.com/feeds/2R3C6Bt5wj.xml",
+    "https://www.ft.com/artificial-intelligence?format=rss",
+    "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/artificial-intelligence/rss.xml",
+    
+    # AI Specific Blogs
     "https://www.technologyreview.com/topic/artificial-intelligence/feed",
     "https://www.aitimejournal.com/feed/",
     "https://becominghuman.ai/feed",
     "https://topmarketingai.com/feed/",
     "https://medium.com/feed/ai-roadmap-institute",
-    "https://intelligence.org/blog/feed/",
-    "https://www.wired.com/feed/tag/ai/latest/rss",
-    "https://www.theguardian.com/technology/artificialintelligenceai/rss",
-    "https://www.sciencedaily.com/rss/computers_math/artificial_intelligence.xml",
-    "https://venturebeat.com/category/ai/feed/",
-    "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
     "https://analyticsindiamag.com/ai-news-updates/feed/",
-    "https://www.livemint.com/rss/AI",
     "https://www.marktechpost.com/feed/",
-    "https://techcrunch.com/category/artificial-intelligence/feed/",
     "https://www.aiwire.net/feed/",
-    "https://www.computerworld.com/artificial-intelligence/feed/",
     "https://justainews.com/feed/",
-    "https://rss.beehiiv.com/feeds/2R3C6Bt5wj.xml",
-    "https://openai.com/news/rss.xml",
-    "https://www.ft.com/artificial-intelligence?format=rss",
-    "https://www.nytimes.com/svc/collections/v1/publish/https://www.nytimes.com/spotlight/artificial-intelligence/rss.xml",
-    "https://theconversation.com/topics/artificial-intelligence-ai-90/articles.atom",
-    "https://indianexpress.com/section/technology/artificial-intelligence/feed/",
-    "https://www.sciencenews.org/topic/artificial-intelligence/feed",
     "https://insideainews.com/feed/",
     "https://news.crunchbase.com/sections/ai/feed/",
-    "https://www.fastcompany.com/section/artificial-intelligence/rss",
-    "https://www.geekwire.com/tag/ai/feed/",
+    "https://theconversation.com/topics/artificial-intelligence-ai-90/articles.atom",
+    "https://indianexpress.com/section/technology/artificial-intelligence/feed/",
+    "https://www.sciencenews.org/topic/artificial-intelligence/feed"
 ]
 
 # --- THE LOGIC ---
@@ -78,6 +78,7 @@ def run_bot():
         return
 
     now = datetime.now(timezone.utc)
+    print(f"Checking {len(RSS_FEEDS)} feeds...")
     
     for url in RSS_FEEDS:
         try:
@@ -102,6 +103,7 @@ def run_bot():
                     post_to_telegram(BOT_TOKEN, entry.title, entry.link, source_name)
                     
         except Exception as e:
+            # If a link fails, skip it
             pass 
 
 if __name__ == "__main__":
