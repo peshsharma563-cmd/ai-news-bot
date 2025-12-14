@@ -9,8 +9,8 @@ import os
 CHANNEL_ID = "@AIGlobalUpdates" 
 
 # --- SAFETY SETTING ---
-# We check for news from the last 25 minutes.
-MAX_AGE_MINUTES = 25 
+# We check for news from the last 20 minutes.
+MAX_AGE_MINUTES = 20 
 
 RSS_FEEDS = [
     # Top Tech & Research
